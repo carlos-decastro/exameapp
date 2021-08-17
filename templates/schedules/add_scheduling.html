@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+
+    Adicionar Agendamento - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+    <div class="container">
+        <br />
+    <h5><b>Agendamentos</b></h5>
+        <div class="row">
+            <div class ="col-md-12">
+                <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                   <label for="{{ form.date.id_for_label }}">Data</label>
+                   {{ form.date|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.hour.id_for_label }}">Hora</label>
+                    {{ form.hour|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.locale.id_for_label }}">Locais</label>
+                    {{ form.locale|add_class:"form-control" }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">Status</label>
+                    {{ form.status|add_class:"form-control" }}
+                 </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>       
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

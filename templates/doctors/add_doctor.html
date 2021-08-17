@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+
+    Adicionar Cliente - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+    <div class="container">
+        <br />
+    <h5><b>Cadastro de Cliente</b></h5>
+        <div class="row">
+            <div class ="col-md-12">
+                <form action="" method="POST" enctype="multipart/form-data"> 
+                {% csrf_token %}
+                <div class="form-group">
+                   <label for="{{ form.first_name.id_for_label }}">Nome</label>
+                   {{ form.first_name|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Sobrenome</label>
+                    {{ form.last_name|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.gender.id_for_label }}">Genero</label>
+                    {{ form.gender|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.doctor_speciality.id_for_label }}">Especialidade</label>
+                    {{ form.doctor_speciality|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.doc.id_for_label }}">Diploma</label>
+                    {{ form.doc|add_class:"form-control-file" }}
+                </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>       
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

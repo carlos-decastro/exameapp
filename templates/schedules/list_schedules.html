@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+    Lista de Agendamentos - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+    <div class="container">
+        <br />
+        <h5><b>Lista de Agendamentos</b></h5>
+        <div class="row">
+            <div class ="col-md-12">
+            <br />
+                <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Paciente</th>
+                    <th scope="col">Local</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Exames</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scheduling in schedules %}
+                        <tr>
+                            <th scope="row">
+                                {% if scheduling.status == 'Finalizado' or scheduling.status == 'Cancelado' %}
+                                    <p style="color:darkgray;" >{{ scheduling.id }}</p>
+                                {% else %}
+                                    {{ scheduling.id }}
+                                {% endif %}
+                            </th>
+
+                            <td>
+                                {% if scheduling.status == 'Finalizado' or scheduling.status == 'Cancelado' %}
+                                    <p style="color:darkgray;" >{{ scheduling.status }}</p>
+                                {% else %}
+                                    {{ scheduling.status }}
+                                {% endif %}
+                                
+                            </td>
+                            <td>
+                                {% for patient in patients %}
+                                    {% for locale in locales %}
+                                        {% if scheduling.patient_id == patient.id and scheduling.locale_id == locale.id%}
+                                            {% if scheduling.status == 'Finalizado' or scheduling.status == 'Cancelado' %}
+                                                <p style="color:darkgray;" >{{ patient.first_name }} {{ patient.last_name }}</p>
+                                                <td><p style="color:darkgray;" >{{ locale.address }}</p></td>
+                                                <td><p style="color:darkgray;" >{{ scheduling.date }}</p></td>
+                                                <td><p style="color:darkgray;" >{{ scheduling.hour }}</p></td>
+                                            {% else %}    
+                                                {{ patient.first_name }} {{ patient.last_name }}
+                                                <td>{{ locale.address }}</td>
+                                                <td>{{ scheduling.date }}</td>
+                                                <td>{{ scheduling.hour }}</td>
+                                            {% endif %}    
+                                        {% endif %}      
+                                    {% endfor %}     
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if scheduling.status == 'Finalizado' or scheduling.status == 'Cancelado' %}
+                                    <b style="color:darkgray;">Preço Total:</b>
+                                    {% for scheduling_exam in schedules_exams %}
+                                        {% if  scheduling_exam.scheduling_id == scheduling.id %}
+                                        </br></br><b style="color:darkgray;">Exame: {{ scheduling_exam.exam}}</b>
+                                            {% for exam in exams %}
+                                                {% if scheduling_exam.exam_id == exam.id %}
+                                                    </br><p1 style="color:darkgray;"><b>Preço:</b> {{ exam.price }}</p1>
+                                                {% endif %}
+                                            {% endfor %}     
+                                            </br><p1 style="color:darkgray;"><b>Doutor:</b> {{ scheduling_exam.doctor}}</p1>
+                                                {% for doctor_speciality in doctors_specialities %}
+                                                    {% if doctor_speciality.doctor_id == scheduling_exam.doctor_id %}
+                                                        {% for speciality in specialities %}
+                                                            {% if doctor_speciality.speciality_id == speciality.id %}
+                                                                <br><p1 style="color:darkgray;"><b>Especialidade:</b> {{ speciality.name }}</p1>
+                                                            {% endif %}
+                                                        {% endfor %}    
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <a style="color:darkgray;" href="#">Excluir Exame</a>
+                                        {% endif %} 
+                                    {% endfor %}
+                                {% else %}
+                                    <b>Preço Total:</b> 
+                                    {% for scheduling_exam in schedules_exams %}
+                                        {% if  scheduling_exam.scheduling_id == scheduling.id %}
+                                        </br></br><b>Exame: {{ scheduling_exam.exam}}</b>
+                                            {% for exam in exams %}
+                                                {% if scheduling_exam.exam_id == exam.id %}
+                                                    </br><b>Preço:</b> {{ exam.price }}
+                                                {% endif %}
+                                            {% endfor %}     
+                                            </br><b>Doutor:</b> {{ scheduling_exam.doctor}}
+                                                {% for doctor_speciality in doctors_specialities %}
+                                                    {% if doctor_speciality.doctor_id == scheduling_exam.doctor_id %}
+                                                        {% for speciality in specialities %}
+                                                            {% if doctor_speciality.speciality_id == speciality.id %}
+                                                                <br><b>Especialidade:</b> {{ speciality.name }}
+                                                            {% endif %}
+                                                        {% endfor %}    
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <a href="{% url 'schedules_exams:delete_scheduling_exam' scheduling_exam.id %}">Excluir Exame</a>
+                                        {% endif %} 
+                                    {% endfor %}
+                                {%endif%}
+
+                                
+                            </td>
+                            {% if scheduling.status == 'Finalizado' or scheduling.status == 'Cancelado' %}
+                                <td><a href="#" class="btn btn-primary btn-sm">Exames</a></td>
+                            {% else %}
+                                <td><a href="{% url 'schedules_exams:add_scheduling_exam' scheduling.id %}" class="btn btn-primary btn-sm">Exames</a></td>
+                            {% endif %}    
+                            <td><a href="{% url 'schedules:edit_scheduling' scheduling.id %}" class="btn btn-primary btn-sm">Editar</a></td>
+                            <td><a href="{% url 'schedules:delete_scheduling' scheduling.id %}" class="btn btn-danger btn-sm ">Excluir</a></td>    
+                        </tr> 
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
